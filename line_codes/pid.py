@@ -2,9 +2,9 @@ import time
 
 class PID:
     def __init__ (self):
-        self.kp = 0
+        self.kp = 100
         self.ki = 0
-        self.kd = 0
+        self.kd = 0.1
         self.last_error = None
         self.integral = 0
         self.last_time = None
@@ -25,7 +25,7 @@ class PID:
                 self.integral += error * dt
 
         result = self.kp * error + self.ki * self.integral + self.kd * derivative
-        result = max(-20, min(20, result))
+        result = max(-100, min(100, result))
         self.last_time = now
         self.last_error = error
         return result
