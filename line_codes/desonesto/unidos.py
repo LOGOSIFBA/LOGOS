@@ -38,7 +38,7 @@ last_position = 0.0
 # VISÃO COMPUTACIONAL
 # =========================================================
 
-index = 1
+index = 0
 camera = cv2.VideoCapture(index)
 
 if not camera.isOpened():
