@@ -35,6 +35,4 @@ class LatestCommandDriver:
                     print(f"[driver] move failed: {exc}", flush=True)
 
     def stop(self):
-        self._stop = True
-        self._wake.set()
-        self.motor.stop()
+        self.motor._move_impl(0)
