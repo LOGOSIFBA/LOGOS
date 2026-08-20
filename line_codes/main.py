@@ -47,6 +47,8 @@ motors = Motors(right = motor_r, left = motor_l)
 color_sensor_r = runtime.color_sensor("7C:4F:AD:79:94:B0")
 color_sensor_l = runtime.color_sensor("24:EC:4A:CB:05:90")
 
+distance_sensor = runtime.distance_sensor("7C:4F:AD:79:B0:44")
+
 driver_r = LatestCommandDriver(motor_r)
 driver_l = LatestCommandDriver(motor_l)
 
@@ -66,13 +68,16 @@ try:
             color_marking = None
         
         if handle_color_marking(color_marking, driver_r, driver_l, motors, odometry):
+            print("-------------------------------------------------\n", flush=True)
+            continue
+        
+        if is_obstacle(distance_sensor):
+            handle_obstacle(driver_r, driver_l, motors, odometry)
+            print("-------------------------------------------------\n", flush=True)
             continue
 
         if is_clear_intersection(digital):
             print("Intersection detected", flush=True)
-            driver_l.set_speed(15)
-            driver_r.set_speed(15)
-            time.sleep(0.3)
 
             color_marking = detect_color_marking(driver_r, driver_l, color_sensor_r, color_sensor_l)
 
@@ -100,6 +105,7 @@ try:
                 continue
 
             handle_left_candidate(driver_r, driver_l, motors, line_sensor, odometry)
+            print("-------------------------------------------------\n", flush=True)
             continue
 
         if is_right_90_candidate(digital):
@@ -113,6 +119,7 @@ try:
                 continue
 
             handle_right_candidate(driver_r, driver_l, motors, line_sensor, odometry)
+            print("-------------------------------------------------\n", flush=True)
             continue
             
         if color_r == "red" and color_l == "red":
@@ -124,6 +131,8 @@ try:
         follow_line(driver_r, driver_l, reading, pid, base_speed)
         print("-------------------------------------------------\n", flush=True)
 
+except KeyboardInterrupt:
+    print("Encerrando...", flush=True)
 finally:
     driver_r.stop()
     driver_l.stop()
