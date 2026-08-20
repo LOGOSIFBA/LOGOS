@@ -72,7 +72,7 @@ try:
             continue
         
         if is_obstacle(distance_sensor):
-            handle_obstacle(driver_r, driver_l, motors, odometry)
+            handle_obstacle(driver_r, driver_l, motors, odometry, line_sensor)
             print("-------------------------------------------------\n", flush=True)
             continue
 
