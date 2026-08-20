@@ -18,8 +18,8 @@ def detect_color_marking(driver_r, driver_l, color_sensor_r, color_sensor_l, dur
     right_green_count = 0
     left_green_count = 0
 
-    driver_r.set_speed(15)
-    driver_l.set_speed(15)
+    driver_r.set_speed(10)
+    driver_l.set_speed(10)
 
     while time.monotonic() - start_time < duration:
         color_r = color_sensor_r.get_color()
@@ -240,7 +240,8 @@ def handle_color_marking(color_marking, driver_r, driver_l, motors, odometry):
 
     return False
 
-def follow_line(driver_r, driver_l, reading, pid, base_speed):
+def follow_line(driver_r, driver_l, reading, pid, base_speed): 
+    print("Following line", flush=True)
     position = reading["position"]
 
     correction = pid.calculate(position)
@@ -283,7 +284,7 @@ def is_obstacle(distance_sensor):
     if distance is None:
         return False
 
-    return distance < 15
+    return distance < 5
 
 def handle_lost_line(driver_r, driver_l, motors, line_sensor, last_position, odometry):
     center_count = 0
@@ -317,23 +318,46 @@ def handle_lost_line(driver_r, driver_l, motors, line_sensor, last_position, odo
         time.sleep(0.01)
 
 def handle_obstacle(driver_r, driver_l, motors, odometry):
+    print("Handling obstacle", flush=True)
     driver_r.stop()
     driver_l.stop()
     time.sleep(0.2)
 
-    move_straight_for(driver_r, driver_l, motors, odometry, 0.15, -20)
+    #Andar pra trás
+    driver_r.set_speed(-20)
+    driver_l.set_speed(-20)
+    time.sleep(0.2)
 
-    turn_right(driver_r, driver_l, motors, odometry, math.radians(90))
-    move_straight_for(driver_r, driver_l, motors, odometry, 0.45, 30)
+    #Vira pra direita
+    driver_r.set_speed(30)
+    driver_l.set_speed(-30)
+    time.sleep(2.1)
 
-    turn_left(driver_r, driver_l, motors, odometry, math.radians(90))
-    move_straight_for(driver_r, driver_l, motors, odometry, 0.50, 30)
+    #Anda pra frente
+    driver_r.set_speed(30)
+    driver_l.set_speed(30)
+    time.sleep(1.9)
 
-    turn_left(driver_r, driver_l, motors, odometry, math.radians(90))
-    move_straight_for(driver_r, driver_l, motors, odometry, 0.45, 30)
+    #Vira pra esquerda
+    driver_r.set_speed(-30)
+    driver_l.set_speed(30)
+    time.sleep(2.1)
 
-    turn_right(driver_r, driver_l, motors, odometry, math.radians(90))
-    time.sleep(0.1)
+    #Anda pra frente pra passar obstaculo
+    driver_r.set_speed(30)
+    driver_l.set_speed(30)
+    time.sleep(2.5)
+
+    #Vira pra esquerdas
+    driver_r.set_speed(-30)
+    driver_l.set_speed(30)
+    time.sleep(2.1)
+
+    #Anda pra frente
+    driver_r.set_speed(30)
+    driver_l.set_speed(30)
+    time.sleep(1.4)
+
 
 def handle_180(driver_r, driver_l, motors, odometry):
     driver_r.stop()
