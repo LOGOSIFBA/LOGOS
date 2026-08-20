@@ -317,7 +317,7 @@ def handle_lost_line(driver_r, driver_l, motors, line_sensor, last_position, odo
 
         time.sleep(0.01)
 
-def handle_obstacle(driver_r, driver_l, motors, odometry):
+def handle_obstacle(driver_r, driver_l, motors, odometry, line_sensor):
     print("Handling obstacle", flush=True)
     driver_r.stop()
     driver_l.stop()
@@ -346,9 +346,9 @@ def handle_obstacle(driver_r, driver_l, motors, odometry):
     #Anda pra frente pra passar obstaculo
     driver_r.set_speed(30)
     driver_l.set_speed(30)
-    time.sleep(2.5)
+    time.sleep(2.6)
 
-    #Vira pra esquerdas
+    #Vira pra esquerda
     driver_r.set_speed(-30)
     driver_l.set_speed(30)
     time.sleep(2.1)
@@ -356,7 +356,54 @@ def handle_obstacle(driver_r, driver_l, motors, odometry):
     #Anda pra frente
     driver_r.set_speed(30)
     driver_l.set_speed(30)
-    time.sleep(1.4)
+    time.sleep(1.5)
+
+    #Vira pra direita
+    driver_r.set_speed(30)
+    driver_l.set_speed(-30)
+    time.sleep(2.1)
+
+    reading = line_sensor.get_data()
+    digital = reading["digital"]
+
+    if any(digital):
+        return True
+
+    driver_l.set_speed(-30)
+    driver_r.set_speed(30)
+
+    start_time = time.monotonic()
+
+    while time.monotonic() - start_time < 2.1:
+        reading = line_sensor.get_data()
+        digital = reading["digital"]
+
+        if digital[2]:
+            driver_r.stop()
+            driver_l.stop()
+            return True
+
+    driver_r.stop()
+    driver_l.stop()
+
+    driver_l.set_speed(30)
+    driver_r.set_speed(-30)
+
+    start_time = time.monotonic()
+
+    while time.monotonic() - start_time < 4.2:
+        reading = line_sensor.get_data()
+        digital = reading["digital"]
+
+        if digital[2]:
+            driver_r.stop()
+            driver_l.stop()
+            return True
+
+    driver_r.stop()
+    driver_l.stop()
+
+    return False
 
 
 def handle_180(driver_r, driver_l, motors, odometry):
