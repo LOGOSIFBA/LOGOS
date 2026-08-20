@@ -97,6 +97,8 @@ try:
         if is_left_90_candidate(digital):
             print("Left 90 candidate detected", flush=True)
 
+            driver_r.stop()
+            driver_l.stop()
             color_marking = detect_color_marking(driver_r, driver_l, color_sensor_r, color_sensor_l)
 
             if handle_color_marking(color_marking, driver_r, driver_l, motors, odometry):
