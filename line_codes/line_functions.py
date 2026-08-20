@@ -12,8 +12,8 @@ def is_left_90_candidate(digital):
 def is_green(color):
     return color in GREEN_VALUES
 
-def detect_color_marking(driver_r, driver_l, color_sensor_r, color_sensor_l, duration=0.6):
-    start_time = time.monotonic()
+def detect_color_marking(driver_r,driver_l,color_sensor_r,color_sensor_l):
+    print("Detecting color marking", flush=True)
 
     right_green_count = 0
     left_green_count = 0
@@ -21,7 +21,12 @@ def detect_color_marking(driver_r, driver_l, color_sensor_r, color_sensor_l, dur
     driver_r.set_speed(10)
     driver_l.set_speed(10)
 
-    while time.monotonic() - start_time < duration:
+    right_time = 0.3
+    left_time = right_time * 2
+
+    start_time = time.monotonic()
+
+    while time.monotonic() - start_time < 0.2:
         color_r = color_sensor_r.get_color()
         color_l = color_sensor_l.get_color()
 
@@ -30,6 +35,56 @@ def detect_color_marking(driver_r, driver_l, color_sensor_r, color_sensor_l, dur
 
         if is_green(color_l):
             left_green_count += 1
+
+    driver_r.set_speed(15)
+    driver_l.set_speed(-15)
+
+    start_time = time.monotonic()
+
+    while time.monotonic() - start_time < right_time:
+        color_r = color_sensor_r.get_color()
+        color_l = color_sensor_l.get_color()
+
+        if is_green(color_r):
+            right_green_count += 1
+
+        if is_green(color_l):
+            left_green_count += 1
+
+    driver_r.set_speed(-15)
+    driver_l.set_speed(15)
+
+    start_time = time.monotonic()
+
+    while time.monotonic() - start_time < left_time:
+        color_r = color_sensor_r.get_color()
+        color_l = color_sensor_l.get_color()
+
+        if is_green(color_r):
+            right_green_count += 1
+
+        if is_green(color_l):
+            left_green_count += 1
+
+    driver_r.set_speed(15)
+    driver_l.set_speed(-15)
+
+    start_time = time.monotonic()
+
+    while time.monotonic() - start_time < right_time:
+        color_r = color_sensor_r.get_color()
+        color_l = color_sensor_l.get_color()
+
+        if is_green(color_r):
+            right_green_count += 1
+
+        if is_green(color_l):
+            left_green_count += 1
+
+    driver_r.stop()
+    driver_l.stop()
+
+    print(f"Right green count: {right_green_count}, Left green count: {left_green_count}", flush=True)
 
     right_confirmed = right_green_count >= 2
     left_confirmed = left_green_count >= 2
@@ -215,14 +270,14 @@ def handle_color_marking(color_marking, driver_r, driver_l, motors, odometry):
         print("Color 180 detected", flush=True)
         driver_r.set_speed(-30)
         driver_l.set_speed(30)
-        time.sleep(4.8)
+        time.sleep(4.4)
         return True
 
     if color_marking == "LEFT":
         print("Color 90 left detected", flush=True)
         driver_r.set_speed(-30)
         driver_l.set_speed(30)
-        time.sleep(1.6)
+        time.sleep(1.8)
         driver_r.set_speed(20)
         driver_l.set_speed(20)
         time.sleep(1.2)
@@ -232,7 +287,7 @@ def handle_color_marking(color_marking, driver_r, driver_l, motors, odometry):
         print("Color 90 right detected", flush=True)
         driver_r.set_speed(30)
         driver_l.set_speed(-30)
-        time.sleep(1.6)
+        time.sleep(1.8)
         driver_r.set_speed(20)
         driver_l.set_speed(20)
         time.sleep(1.2)
@@ -284,7 +339,8 @@ def is_obstacle(distance_sensor):
     if distance is None:
         return False
 
-    return distance < 5
+    return distance < 4
+
 
 def handle_lost_line(driver_r, driver_l, motors, line_sensor, last_position, odometry):
     center_count = 0
@@ -336,7 +392,7 @@ def handle_obstacle(driver_r, driver_l, motors, odometry, line_sensor):
     #Anda pra frente
     driver_r.set_speed(30)
     driver_l.set_speed(30)
-    time.sleep(1.9)
+    time.sleep(1.7)
 
     #Vira pra esquerda
     driver_r.set_speed(-30)
@@ -346,17 +402,17 @@ def handle_obstacle(driver_r, driver_l, motors, odometry, line_sensor):
     #Anda pra frente pra passar obstaculo
     driver_r.set_speed(30)
     driver_l.set_speed(30)
-    time.sleep(2.6)
+    time.sleep(3.3)
 
     #Vira pra esquerda
     driver_r.set_speed(-30)
     driver_l.set_speed(30)
-    time.sleep(2.1)
+    time.sleep(2.3)
 
     #Anda pra frente
     driver_r.set_speed(30)
     driver_l.set_speed(30)
-    time.sleep(1.5)
+    time.sleep(1.7)
 
     #Vira pra direita
     driver_r.set_speed(30)
@@ -374,7 +430,7 @@ def handle_obstacle(driver_r, driver_l, motors, odometry, line_sensor):
 
     start_time = time.monotonic()
 
-    while time.monotonic() - start_time < 2.1:
+    while time.monotonic() - start_time < 2.8:
         reading = line_sensor.get_data()
         digital = reading["digital"]
 
@@ -391,7 +447,7 @@ def handle_obstacle(driver_r, driver_l, motors, odometry, line_sensor):
 
     start_time = time.monotonic()
 
-    while time.monotonic() - start_time < 4.2:
+    while time.monotonic() - start_time < 4.9:
         reading = line_sensor.get_data()
         digital = reading["digital"]
 
