@@ -1,8 +1,6 @@
 import time
 import math
 
-GREEN_VALUES = "green"
-
 def is_clear_intersection(digital):
     return all(digital)
 
@@ -10,9 +8,12 @@ def is_left_90_candidate(digital):
     return digital[0] and digital[1] and not digital[3] and not digital[4]
 
 def is_green(color):
-    return color in GREEN_VALUES
+    return color == "green"
 
-def detect_color_marking(driver_r,driver_l,color_sensor_r,color_sensor_l):
+def is_red(color):
+    return color == "red"
+
+def detect_color_marking(driver_r, driver_l, color_sensor_r,color_sensor_l):
     print("Detecting color marking", flush=True)
 
     right_green_count = 0
@@ -130,7 +131,6 @@ def turn_left(driver_r, driver_l, motors, odometry, target_angle_rad):
         if turned_angle >= target_angle_rad:
             break
 
-        time.sleep(0.01)
 
     driver_r.stop()
     driver_l.stop()
@@ -150,8 +150,6 @@ def turn_right(driver_r, driver_l, motors, odometry, target_angle_rad):
         if turned_angle <= -target_angle_rad:
             break
 
-        time.sleep(0.01)
-
     driver_r.stop()
     driver_l.stop()
 
@@ -163,8 +161,6 @@ def move_straight_for(driver_r, driver_l, motors, odometry, duration, speed):
         driver_r.set_speed(speed)
 
         update_odometry_motors(odometry, motors)
-
-        time.sleep(0.01)
 
     driver_r.stop()
     driver_l.stop()
@@ -179,8 +175,10 @@ def center_stays_on_line_during_short_forward(driver_r, driver_l, motors, line_s
         reading = line_sensor.get_data()
         digital = reading["digital"]
 
-        if not digital[2]:
-            break
+        if  digital[2]:
+            driver_r.stop()
+            driver_l.stop()
+            return True
 
     driver_r.stop()
     driver_l.stop()
@@ -201,9 +199,6 @@ def center_stays_on_line_during_short_forward(driver_r, driver_l, motors, line_s
             driver_l.stop()
             return True
 
-    driver_r.stop()
-    driver_l.stop()
-
     left_turn_time = right_turn_time * 2
 
     driver_l.set_speed(30)
@@ -220,11 +215,9 @@ def center_stays_on_line_during_short_forward(driver_r, driver_l, motors, line_s
             driver_l.stop()
             return True
 
-    driver_r.stop()
-    driver_l.stop()
-
     driver_l.set_speed(-30)
     driver_r.set_speed(30)
+
     time.sleep(right_turn_time)
 
     driver_r.stop()
@@ -326,7 +319,6 @@ def try_cross_gap(driver_r, driver_l, motors, line_sensor, odometry):
             driver_l.stop()
             return True
 
-        time.sleep(0.01)
 
     forward_time = time.monotonic() - start_time
 
@@ -371,7 +363,6 @@ def handle_lost_line(driver_r, driver_l, motors, line_sensor, last_position, odo
             driver_l.stop()
             return True
 
-        time.sleep(0.01)
 
 def handle_obstacle(driver_r, driver_l, motors, odometry, line_sensor):
     print("Handling obstacle", flush=True)
