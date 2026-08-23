@@ -11,8 +11,6 @@ import numpy as np
 
 # ---------- CONFIGURACOES ----------
 CAMERA_INDEX = 1
-FRAME_WIDTH = 1280
-FRAME_HEIGHT = 720
 
 FX = 1347.20      # fx calibrado (px) - o mesmo da calibracao anterior
 DIAMETRO_REAL_CM = 4.865  # diametro real da esfera (cm) - AJUSTE conforme a esfera usada
