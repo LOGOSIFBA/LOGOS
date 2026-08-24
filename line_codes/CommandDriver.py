@@ -7,7 +7,7 @@ class LatestCommandDriver:
     que tenha ficado obsoleta enquanto o BLE ainda processava a anterior.
     Evita o acúmulo de comandos atrasados na fila interna do TractionModule.
     """
-    def _init_(self, motor):
+    def __init__(self, motor):
         self.motor = motor
         self._lock = threading.Lock()
         self._pending = None
