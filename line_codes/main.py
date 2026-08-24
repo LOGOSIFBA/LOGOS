@@ -1,6 +1,6 @@
 from openrdk import CommsRuntime
 from openrdk import Motors
-from Odometry import Odometry
+from odometry import Odometry
 from pid import PID
 from line_functions import (
     set_robot_context,
@@ -27,6 +27,7 @@ from CommandDriver import LatestCommandDriver
 import time
 
 base_speed = 20.0
+last_position = 0.0
 
 runtime = CommsRuntime(
     auto_start=True,
@@ -68,6 +69,9 @@ try:
         reading = line_sensor.get_data()
         digital = reading["digital"]
 
+        if reading["line_detected"]:
+            last_position = reading["position"]
+
         color_r = color_sensor_r.get_color()
         color_l = color_sensor_l.get_color()
 
@@ -82,6 +86,7 @@ try:
             continue
 
         if is_obstacle(distance_sensor):
+            print("Obstacle detected", flush=True)
             handle_obstacle(line_sensor)
             print("-------------------------------------------------\n", flush=True)
             continue
@@ -132,6 +137,16 @@ try:
 
             handle_right_candidate(line_sensor)
             print("-------------------------------------------------\n", flush=True)
+            continue
+
+        if is_gap(reading):
+            print("Gap detected", flush=True)
+            gap_found = try_cross_gap(line_sensor)
+
+            if not gap_found:
+                print("Gap not found, handling lost line", flush=True)
+                handle_lost_line(line_sensor, last_position)
+
             continue
 
         if color_r == "red" and color_l == "red":
