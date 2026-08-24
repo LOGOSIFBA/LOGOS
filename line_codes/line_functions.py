@@ -342,7 +342,6 @@ def is_obstacle(distance_sensor):
 
 
 def handle_lost_line(line_sensor, last_position):
-    center_count = 0
 
     if last_position < 0:
         left_speed = 15
@@ -359,12 +358,7 @@ def handle_lost_line(line_sensor, last_position):
         reading = line_sensor.get_data()
         digital = reading["digital"]
 
-        if reading["line_detected"] and digital[2]:
-            center_count += 1
-        else:
-            center_count = 0
-
-        if center_count >= 3:
+        if digital[2]:
             both_drivers_stop()
             return True
 
