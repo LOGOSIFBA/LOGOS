@@ -28,6 +28,7 @@ import time
 
 base_speed = 20.0
 last_position = 0.0
+state = "FOLLOW_LINE"
 
 runtime = CommsRuntime(
     auto_start=True,
@@ -66,96 +67,119 @@ set_robot_context(driver_r, driver_l, motors, odometry)
 
 try:
     while True:
-        reading = line_sensor.get_data()
-        digital = reading["digital"]
+        if state == "FOLLOW_LINE":
+            print("Follow line state", flush=True)
 
-        if reading["line_detected"]:
-            last_position = reading["position"]
+            reading = line_sensor.get_data()
+            digital = reading["digital"]
 
-        color_r = color_sensor_r.get_color()
-        color_l = color_sensor_l.get_color()
+            if reading["line_detected"]:
+                last_position = reading["position"]
 
-        if is_green(color_r) or is_green(color_l):
-            print("Green detected", flush=True)
-            color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
-        else:
-            color_marking = None
+            color_r = color_sensor_r.get_color()
+            color_l = color_sensor_l.get_color()
 
-        if handle_color_marking(color_marking):
-            print("-------------------------------------------------\n", flush=True)
-            continue
+            if color_r == "silver" and color_l == "silver":
+                print("Silver detected, entering rescue room state", flush=True)
+                state = "RESCUE_ROOM"
+                both_drivers_stop()
+                continue
 
-        if is_obstacle(distance_sensor):
-            print("Obstacle detected", flush=True)
-            handle_obstacle(line_sensor)
-            print("-------------------------------------------------\n", flush=True)
-            continue
-
-        if is_clear_intersection(digital):
-            print("Intersection detected", flush=True)
-
-            color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
+            if is_green(color_r) or is_green(color_l):
+                print("Green detected", flush=True)
+                color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
+            else:
+                color_marking = None
 
             if handle_color_marking(color_marking):
-                print("Color marking handled after intersection", flush=True)
                 print("-------------------------------------------------\n", flush=True)
                 continue
 
-            print("Handling intersection", flush=True)
-            print("-------------------------------------------------\n", flush=True)
-
-            both_drivers_set_speed(30, 30)
-            time.sleep(0.35)
-
-            continue
-
-        if is_left_90_candidate(digital):
-            print("Left 90 candidate detected", flush=True)
-
-            both_drivers_stop()
-
-            color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
-
-            if handle_color_marking(color_marking):
-                print("Color marking handled after intersection", flush=True)
+            if is_obstacle(distance_sensor):
+                print("Obstacle detected", flush=True)
+                handle_obstacle(line_sensor)
                 print("-------------------------------------------------\n", flush=True)
                 continue
 
-            handle_left_candidate(line_sensor)
-            print("-------------------------------------------------\n", flush=True)
-            continue
+            if is_clear_intersection(digital):
+                print("Intersection detected", flush=True)
 
-        if is_right_90_candidate(digital):
-            print("Right 90 candidate detected", flush=True)
+                color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
 
-            color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
+                if handle_color_marking(color_marking):
+                    print("Color marking handled after intersection", flush=True)
+                    print("-------------------------------------------------\n", flush=True)
+                    continue
 
-            if handle_color_marking(color_marking):
-                print("Color marking handled after intersection", flush=True)
+                print("Handling intersection", flush=True)
+                print("-------------------------------------------------\n", flush=True)
+
+                both_drivers_set_speed(30, 30)
+                time.sleep(0.35)
+
+                continue
+
+            if is_left_90_candidate(digital):
+                print("Left 90 candidate detected", flush=True)
+
+                both_drivers_stop()
+
+                color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
+
+                if handle_color_marking(color_marking):
+                    print("Color marking handled after intersection", flush=True)
+                    print("-------------------------------------------------\n", flush=True)
+                    continue
+
+                handle_left_candidate(line_sensor)
                 print("-------------------------------------------------\n", flush=True)
                 continue
 
-            handle_right_candidate(line_sensor)
+            if is_right_90_candidate(digital):
+                print("Right 90 candidate detected", flush=True)
+
+                color_marking = detect_color_marking(color_sensor_r, color_sensor_l)
+
+                if handle_color_marking(color_marking):
+                    print("Color marking handled after intersection", flush=True)
+                    print("-------------------------------------------------\n", flush=True)
+                    continue
+
+                handle_right_candidate(line_sensor)
+                print("-------------------------------------------------\n", flush=True)
+                continue
+
+            if is_gap(reading):
+                print("Gap detected", flush=True)
+                gap_found = try_cross_gap(line_sensor)
+
+                if not gap_found:
+                    print("Gap not found, handling lost line", flush=True)
+                    handle_lost_line(line_sensor, last_position)
+
+                continue
+
+            if color_r == "red" and color_l == "red":
+                print("Red color detected, stopping...", flush=True)
+                both_drivers_stop()
+                break
+
+            follow_line(reading, pid, base_speed)
             print("-------------------------------------------------\n", flush=True)
-            continue
 
-        if is_gap(reading):
-            print("Gap detected", flush=True)
-            gap_found = try_cross_gap(line_sensor)
+        if state == "RESCUE_ROOM":
+            print("Rescue room state", flush=True)
 
-            if not gap_found:
-                print("Gap not found, handling lost line", flush=True)
-                handle_lost_line(line_sensor, last_position)
+        if state == "EXIT_RESCUE_ROOM":    
+            print("Exit rescue room state", flush=True)
 
-            continue
+            reading = line_sensor.get_data()
+            digital = reading["digital"]
 
-        if color_r == "red" and color_l == "red":
-            print("Vermelho detectado, parando...", flush=True)
-            both_drivers_stop()
-            break
-
-        follow_line(reading, pid, base_speed)
-        print("-------------------------------------------------\n", flush=True)
+            if any(digital):
+                print("Line detected, returning to follow line state", flush=True)
+                state = "FOLLOW_LINE"
+                continue
 
 except KeyboardInterrupt:
     print("Encerrando...", flush=True)
