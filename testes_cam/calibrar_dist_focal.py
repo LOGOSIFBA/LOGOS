@@ -29,9 +29,9 @@ FRAME_HEIGHT = 720
 # Parametros do HoughCircles (ajuste conforme necessario)
 DP = 1.2
 MIN_DIST = 50
-PARAM1 = 90
-PARAM2 = 50
-MIN_RADIUS = 50
+PARAM1 = 85
+PARAM2 = 42
+MIN_RADIUS = 30
 MAX_RADIUS = 400
 # ------------------------------------
 
