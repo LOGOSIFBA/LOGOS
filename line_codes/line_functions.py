@@ -50,7 +50,7 @@ def detect_color_marking(color_sensor_r, color_sensor_l):
 
     both_drivers_set_speed(10, 10)
 
-    right_time = 0.3
+    right_time = 0.2
     left_time = right_time * 2
 
     start_time = time.monotonic()
@@ -107,6 +107,8 @@ def detect_color_marking(color_sensor_r, color_sensor_l):
         if is_green(color_l):
             left_green_count += 1
 
+    both_drivers_set_speed(-15, -15)
+    time.sleep(0.2)
     both_drivers_stop()
 
     print(f"Right green count: {right_green_count}, Left green count: {left_green_count}", flush=True)
@@ -184,7 +186,6 @@ def move_straight_for(duration, speed):
     while time.monotonic() - start_time < duration:
         both_drivers_set_speed(speed, speed)
 
-        update_odometry_motors()
 
     both_drivers_stop()
 
@@ -254,7 +255,7 @@ def handle_left_candidate(line_sensor):
     else:
         print("Center did not stay on line, turning left", flush=True)
         both_drivers_set_speed(30, -30)
-        time.sleep(1.6)
+        time.sleep(1.4)
 
 
 def handle_right_candidate(line_sensor):
@@ -268,7 +269,7 @@ def handle_right_candidate(line_sensor):
     else:
         print("Center did not stay on line, turning right", flush=True)
         both_drivers_set_speed(-30, 30)
-        time.sleep(1.6)
+        time.sleep(1.4)
 
 
 def handle_color_marking(color_marking):
@@ -280,18 +281,18 @@ def handle_color_marking(color_marking):
 
     if color_marking == "LEFT":
         print("Color 90 left detected", flush=True)
+        both_drivers_set_speed(20, 20)
+        time.sleep(1.0)
         both_drivers_set_speed(30, -30)
         time.sleep(1.8)
-        both_drivers_set_speed(20, 20)
-        time.sleep(1.2)
         return True
 
     if color_marking == "RIGHT":
         print("Color 90 right detected", flush=True)
+        both_drivers_set_speed(20, 20)
+        time.sleep(1.0)
         both_drivers_set_speed(-30, 30)
         time.sleep(1.8)
-        both_drivers_set_speed(20, 20)
-        time.sleep(1.2)
         return True
 
     return False
@@ -306,8 +307,8 @@ def follow_line(reading, pid, base_speed):
     left_speed = base_speed + correction
     right_speed = base_speed - correction
 
-    left_speed = max(-50.0, min(50.0, left_speed))
-    right_speed = max(-50.0, min(50.0, right_speed))
+    left_speed = max(-60.0, min(60.0, left_speed))
+    right_speed = max(-60.0, min(60.0, right_speed))
 
     both_drivers_set_speed(left_speed, right_speed)
 
@@ -317,8 +318,6 @@ def try_cross_gap(line_sensor):
 
     while time.monotonic() - start_time < 3.0:
         both_drivers_set_speed(30, 30)
-
-        update_odometry_motors()
 
         reading = line_sensor.get_data()
 
@@ -352,8 +351,6 @@ def handle_lost_line(line_sensor, last_position):
 
     while True:
         both_drivers_set_speed(left_speed, right_speed)
-
-        update_odometry_motors()
 
         reading = line_sensor.get_data()
         digital = reading["digital"]
