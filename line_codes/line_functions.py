@@ -51,22 +51,8 @@ def detect_color_marking(color_sensor_r, color_sensor_l):
     right_green_count = 0
     left_green_count = 0
 
-    both_drivers_set_speed(10, 10)
-
-    right_time = 0.45
+    right_time = 0.5
     left_time = right_time * 2
-
-    start_time = time.monotonic()
-
-    while time.monotonic() - start_time < 0.3:
-        color_r = color_sensor_r.get_color()
-        color_l = color_sensor_l.get_color()
-
-        if is_green(color_r):
-            right_green_count += 1
-
-        if is_green(color_l):
-            left_green_count += 1
 
     both_drivers_set_speed(-15, 15)
 
@@ -139,7 +125,7 @@ def is_gap(digital):
         last_line_time = time.monotonic()
         return False
 
-    return time.monotonic() - last_line_time >= 0.2
+    return time.monotonic() - last_line_time >= 2
 
 
 def update_odometry_motors():
@@ -193,20 +179,17 @@ def move_straight_for(duration, speed):
     both_drivers_stop()
 
 
-def handle_intersection():
-    move_straight_for(0.3, 20)
-
 def ways_check(line_sensor):
     right = False
     left = False
     front = False
     ways = 0
-    right_curve = 1.55
+    right_curve = 1.5
     left_curve = right_curve * 2
 
     centralize_on_line(line_sensor)
 
-    move_straight_for(0.85, 20)
+    move_straight_for(0.8, 25)
 
     reading = line_sensor.get_data()
     digital = reading["digital"]
@@ -219,6 +202,7 @@ def ways_check(line_sensor):
 
     both_drivers_set_speed(30, -30)
     time.sleep(right_curve)
+    both_drivers_stop()
 
     reading = line_sensor.get_data()
     digital = reading["digital"]
@@ -231,6 +215,7 @@ def ways_check(line_sensor):
 
     both_drivers_set_speed(-30, 30)
     time.sleep(left_curve)
+    both_drivers_stop()
 
     reading = line_sensor.get_data()
     digital = reading["digital"]
@@ -241,23 +226,30 @@ def ways_check(line_sensor):
 
     print(left, flush=True)
 
-    if ways != 1:
+    if ways > 1:
         both_drivers_set_speed(30, -30)
         time.sleep(right_curve)
-        centralize_on_line(line_sensor)
-        move_straight_for(0.25, 30)
+        move_straight_for(0.5, -30)
         print("Green check is necessary", flush=True)
         return True
     elif front:
         both_drivers_set_speed(30, -30)
         time.sleep(right_curve)
-        centralize_on_line(line_sensor)
+        move_straight_for(0.35, 30)
+        return False
     elif left:
-        centralize_on_line(line_sensor)
+        move_straight_for(0.35, 30)
+        return False
     elif right:
         both_drivers_set_speed(30, -30)
-        time.sleep(right_curve*2)
-        centralize_on_line(line_sensor)
+        time.sleep(right_curve*2.15)
+        move_straight_for(0.35, 30)
+        return False
+    else:
+        move_straight_for(0.4, -30)
+        both_drivers_set_speed(30, -30)
+        time.sleep(right_curve)
+        return False
 
 
 def handle_curve_candidate(line_sensor, color_sensor_r, color_sensor_l):
@@ -302,7 +294,6 @@ def follow_line(reading, pid, base_speed):
 
     correction = pid.calculate(position)
 
-    print(pid.get_pid())
     left_speed = base_speed + correction
     right_speed = base_speed - correction
 
@@ -433,7 +424,7 @@ def handle_obstacle(line_sensor):
     return False
 
 def centralize_on_line(line_sensor):
-    move_straight_for(0.6, -20)
+    move_straight_for(0.5, -30)
     time.sleep(0.1)
 
     both_drivers_set_speed(-30, 30)
@@ -448,7 +439,7 @@ def centralize_on_line(line_sensor):
         if digital[2]:
             both_drivers_stop()
             time.sleep(0.1)
-            move_straight_for(0.3, 20)
+            move_straight_for(0.35, 30)
             return True
 
     left_turn_time = right_turn_time * 2
@@ -464,7 +455,7 @@ def centralize_on_line(line_sensor):
         if digital[2]:
             both_drivers_stop()
             time.sleep(0.1)
-            move_straight_for(0.3, 20)
+            move_straight_for(0.35, 30)
             return True
 
     both_drivers_set_speed(-30, 30)
@@ -474,8 +465,6 @@ def centralize_on_line(line_sensor):
     both_drivers_stop()
 
     return False
-
-
 
 def handle_180():
     both_drivers_stop()
