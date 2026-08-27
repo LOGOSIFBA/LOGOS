@@ -9,7 +9,6 @@ from line_functions import (
     is_curve_90_candidate,
     centralize_on_line,
     is_gap,
-    is_green,
     is_obstacle,
     handle_curve_candidate,
     handle_lost_line,
@@ -72,11 +71,6 @@ try:
             color_r = color_sensor_r.get_color()
             color_l = color_sensor_l.get_color()
 
-            if color_r == "silver" and color_l == "silver":
-                print("Silver detected, entering rescue room state", flush=True)
-                state = "RESCUE_ROOM"
-                both_drivers_stop()
-                continue
 
             if color_r == "red" and color_l == "red":
                 print("Vermelho detectado, parando...", flush=True)
@@ -92,6 +86,8 @@ try:
 
             if is_curve_90_candidate(digital):
                 print("90 Curve candidate detected", flush=True)
+                both_drivers_set_speed(10, 10)
+                time.sleep(0.5)
                 handle_curve_candidate(line_sensor, color_sensor_r, color_sensor_l)
                 print("-------------------------------------------------\n", flush=True)
                 continue
