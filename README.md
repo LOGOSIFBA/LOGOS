@@ -560,9 +560,9 @@ Special thanks to:
 - **IFBA Campus Salvador**
 - **GSAM — Sistema de Automação e Mecatrônica**
 - **IFBA Robotics Laboratory**
-- **Professor Andrea Bitencourt**
-- **Igor Lisboa**
-- **Henrique Scander**
+- **Professor Andrea Cassia Peixoto Bitencourt**
+- **Igor Lisboa Ramos**
+- **Henrique Scander Coelho**
 
 The team also recognizes the work of **Robovante**, which represented IFBA alongside LOGOS during OBR 2026.
 
@@ -570,8 +570,8 @@ The team also recognizes the work of **Robovante**, which represented IFBA along
 
 ## Team LOGOS — OBR 2026
 
-- **Rafael Lima Ribeiro dos Santos** — Captain
-- **Larissa Valentin**
-- **Israel Santos**
-- **Chanderson Santos**
+- **Rafael Lima Ribeiro dos Santos**
+- **Larissa do Nascimento Valentim de Oliveira**
+- **Israel Santos Rodrigues de Carvalho**
+- **Chanderson Santos de Santana**
 ```
