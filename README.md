@@ -1,118 +1,97 @@
-# LOGOS
+# LOGOS — Autonomous Robotics Team
 
-Autonomous robotics project developed in Python, focused on line following, sensor-based navigation, and autonomous handling of different track situations.
+Autonomous robotics project developed by **Team LOGOS**, representing the **Federal Institute of Bahia (IFBA)** in the **2026 Brazilian Robotics Olympiad (OBR)**.
 
-The robot uses **Open-RDK**, PID control, odometry, line sensors, color sensors, and distance sensing to make navigation decisions in real time.
+The project focuses on autonomous line-following navigation using **Python**, **Open-RDK**, infrared line sensing, PID control, color detection, distance sensing, and dedicated logic for handling different situations found on the OBR track.
 
-## Features
+During our participation in OBR 2026, Team LOGOS received the **Extra Innovation Award**.
 
-* PID-based line following
-* Differential drive control
-* Odometry-based movement estimation
-* Intersection detection
-* 90-degree turn handling
-* Line gap detection
-* Lost-line recovery
-* Obstacle detection and avoidance
-* Color marking detection
-* 180-degree turn handling
-* Controlled movement using distance and rotation
+---
 
-## Technologies
+## Team
 
-* Python
-* Open-RDK
-* PID Control
-* Differential Drive Odometry
-* Sensor-based Navigation
+### LOGOS
 
-## Project Structure
+- **Rafael Lima Ribeiro dos Santos** — Team Captain
+- **Larissa Valentin**
+- **Israel Santos**
+- **Chanderson Santos**
 
-```text
-LOGOS/
-├── line_codes/
-│   ├── CommandDriver.py
-│   ├── line_functions.py
-│   ├── main.py
-│   ├── odometry.py
-│   ├── pid.py
-│   ├── desonesto/
-│   └── honesto/
-│
-├── testes_cam/
-│   └── pattern.png
-│
-└── .gitattributes
-```
+The team developed and tested the robot with the support of the **IFBA Robotics Laboratory** and the **GSAM — Automation and Mechatronics Systems Research Group**.
 
-## Core Modules
+We also received technical guidance and support from **Igor Lisboa**, **Henrique Scander**, and Professor **Andrea Bitencourt** throughout the development process.
 
-### `main.py`
+---
 
-Main execution loop responsible for coordinating sensor readings, motor control, odometry updates, PID line following, and special navigation behaviors.
+## OBR 2026
 
-### `line_functions.py`
+Team LOGOS participated in the **2026 Brazilian Robotics Olympiad (OBR)** representing IFBA.
 
-Contains the main navigation logic, including intersection handling, 90-degree turns, obstacle avoidance, line recovery, gap crossing, and color-based behaviors.
+The competition required the robot to autonomously navigate a track containing different challenges such as:
 
-### `pid.py`
+- Curves
+- Intersections
+- Line gaps
+- Sharp turns
+- Color markings
+- Obstacles
+- Line recovery situations
+- Autonomous navigation decisions
 
-Implements the PID controller used to keep the robot aligned with the line.
+For the competition, development focused heavily on **reliability and repeatability**.
 
-### `odometry.py`
+Several navigation behaviors were implemented using experimentally tested movement sequences and timing-based maneuvers when they proved more reliable under competition conditions.
 
-Estimates the robot's position and orientation based on motor movement.
+This approach allowed the team to prioritize a stable robot behavior over experimental navigation techniques that had not yet been tested extensively enough for competition use.
 
-### `CommandDriver.py`
+### Achievement
 
-Handles motor commands used during normal movement and special maneuvers.
+> **Extra Innovation Award — OBR 2026**
+
+The award recognized the team's technical development and innovative approach during the competition.
+
+---
+
+## Overview
+
+The robot continuously reads its sensors and determines the appropriate navigation behavior according to the current track situation.
+
+Its control architecture combines:
+
+- PID-based line following
+- Infrared line sensing
+- Motor control
+- Color sensing
+- Distance sensing
+- Track situation detection
+- Autonomous decision-making
+- Pre-tested special maneuvers
+
+Normal line following is performed using PID control.
+
+When a special condition is detected, the robot temporarily leaves the normal PID navigation flow and executes a dedicated maneuver before returning to line following.
+
+---
 
 ## Navigation Flow
-
-The robot continuously reads its sensors and selects the appropriate behavior.
 
 ```text
 Sensor Reading
       ↓
-Situation Detection
+Track Situation Detection
       ↓
-Normal Line Following
-      or
-Special Maneuver
-      ↓
-Motor Control
-      ↓
-Odometry Update
-```
+ ┌───────────────┐
+ │ Normal Track  │
+ └───────┬───────┘
+         ↓
+ PID Line Following
 
-During normal conditions, the robot follows the line using PID control.
+        or
 
-When a special situation is detected, such as an obstacle, intersection, line gap, or color marking, the robot executes the corresponding maneuver before returning to normal line following.
-
-## Running the Project
-
-The project requires a configured Open-RDK environment and compatible robot hardware.
-
-Navigate to the main code directory:
-
-```bash
-cd line_codes
-```
-
-Run:
-
-```bash
-python main.py
-```
-
-Sensor and motor serial numbers must match the devices connected to the robot.
-
-## Development Status
-
-The project is currently under active development.
-
-Navigation strategies, sensor handling, and movement logic are continuously being tested and improved.
-
-## Authors
-
-LOGOS Robotics Team
+ ┌──────────────────┐
+ │ Special Situation│
+ └────────┬─────────┘
+          ↓
+ Dedicated Maneuver
+          ↓
+ Return to Line
