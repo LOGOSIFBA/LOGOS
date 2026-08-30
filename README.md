@@ -36,10 +36,10 @@ Team LOGOS participated in the **2026 Brazilian Robotics Olympiad (OBR)** with a
 
 The 2026 team was composed of:
 
-- **Rafael Lima Ribeiro dos Santos**
-- **Larissa Valentin**
-- **Israel Santos**
-- **Chanderson Santos**
+- Chanderson Santos de Santana
+- Israel Santos Rodrigues de Carvalho
+- Larissa do Nascimento Valentim de Oliveira
+- Rafael Lima Ribeiro dos Santos
 
 LOGOS represented IFBA alongside another team, **Robovante**.
 
@@ -569,8 +569,8 @@ The team also recognizes the work of **Robovante**, which represented IFBA along
 
 ## Team LOGOS — OBR 2026
 
-- **Rafael Lima Ribeiro dos Santos**
-- **Larissa do Nascimento Valentim de Oliveira**
-- **Israel Santos Rodrigues de Carvalho**
-- **Chanderson Santos de Santana**
+- Chanderson Santos de Santana
+- Israel Santos Rodrigues de Carvalho
+- Larissa do Nascimento Valentim de Oliveira
+- Rafael Lima Ribeiro dos Santos
 ```
