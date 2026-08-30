@@ -1,624 +1,577 @@
-# LOGOS — Autonomous Robotics Team
+# LOGOS
 
-Autonomous robotics project developed by **Team LOGOS**, representing the **Federal Institute of Bahia (IFBA)** in the **2026 Brazilian Robotics Olympiad (OBR)**.
+Autonomous mobile robotics project developed by **Team LOGOS**, a robotics team from the **Federal Institute of Bahia (IFBA) — Salvador Campus**.
 
-The project integrates **software development, electronics, mechanical design, embedded systems, sensors, control algorithms, and autonomous navigation** into a complete mobile robotic platform designed to solve the challenges proposed by the OBR Rescue Line competition.
+The project integrates **mechanical design, electronics, embedded systems, sensors, control algorithms, and autonomous navigation** into a line-following and rescue-oriented mobile robot.
 
-During our participation in **OBR 2026**, Team LOGOS received the **Extra Innovation Award**.
+Team LOGOS participated in the **2026 Brazilian Robotics Olympiad (OBR)**, where the team received the **Extra Innovation Award**.
 
 ---
 
-## Team LOGOS
+## About Team LOGOS
+
+LOGOS is a student robotics team from **IFBA — Instituto Federal da Bahia, Campus Salvador**.
+
+The project was developed as a complete robotic system rather than only a software application. The robot required the integration of:
+
+- Mechanical structure and assembly
+- Motors and drivetrain
+- Embedded electronics
+- Motor control
+- Line sensing
+- Color sensing
+- Distance sensing
+- Autonomous navigation
+- PID control
+- Movement strategies
+- Physical testing and calibration
+
+Development was supported by the **GSAM — Sistema de Automação e Mecatrônica** and the **IFBA Robotics Laboratory**.
+
+---
+
+## OBR 2026
+
+Team LOGOS participated in the **2026 Brazilian Robotics Olympiad (OBR)** with an autonomous robot designed for the challenges of line following, track interpretation, obstacle handling, and rescue-oriented navigation.
+
+The 2026 team was composed of:
 
 - **Rafael Lima Ribeiro dos Santos**
 - **Larissa Valentin**
 - **Israel Santos**
 - **Chanderson Santos**
 
-The project was developed with support from the **IFBA Robotics Laboratory** and the **GSAM — Automation and Mechatronics Systems Research Group**.
-
-We also received technical guidance, knowledge, and support from:
-
-- **Igor Lisboa**
-- **Henrique Scander**
-- **Prof. Andrea Bitencourt**
-
-Their support was fundamental throughout the development, testing, and preparation of the robot for the competition.
-
----
-
-## OBR 2026
-
-Team LOGOS participated in the **2026 Brazilian Robotics Olympiad — Rescue Line**, representing the Federal Institute of Bahia.
-
-The competition requires the development of an autonomous robot capable of navigating a track containing several challenges.
-
-These include situations such as:
-
-- Straight-line navigation
-- Curves
-- Sharp 90-degree turns
-- Intersections
-- Line gaps
-- Color markings
-- Obstacles
-- Lost-line recovery
-- Ramps and changes in terrain
-- Autonomous decision-making
-- Rescue-related challenges
-
-The development of the robot required the integration of multiple engineering areas rather than only software.
-
-The project involved:
-
-- Programming
-- Electronics
-- Mechanical design
-- Embedded systems
-- Sensor integration
-- Motor control
-- Control systems
-- Physical prototyping
-- Testing and calibration
+LOGOS represented IFBA alongside another team, **Robovante**.
 
 ---
 
 ## Achievement
 
-### OBR 2026 — Extra Innovation Award
+### Extra Innovation Award — OBR 2026
 
-Team LOGOS received the:
+Team LOGOS received the **Extra Innovation Award** during OBR 2026.
 
-> 🏆 **Extra Innovation Award — OBR 2026**
-
-The recognition made our first participation in the Brazilian Robotics Olympiad even more significant and reflected the work carried out throughout the development of the robot.
+The award recognizes the work developed by the team as a whole throughout the design, integration, experimentation, and competition process.
 
 ---
 
-# Robot Overview
+## Support and Mentorship
 
-The LOGOS robot is an autonomous mobile robotic platform designed to interpret its environment through different sensors and make navigation decisions in real time.
+The project was developed with institutional and technical support from:
 
-Its operation combines three major areas:
+- **IFBA — Instituto Federal da Bahia**
+- **GSAM — Sistema de Automação e Mecatrônica**
+- **IFBA Robotics Laboratory**
 
-1. **Software and autonomous control**
-2. **Electronics and hardware integration**
-3. **Mechanical design and prototyping**
+The team also received important technical support from:
 
-The final system was built through continuous integration between these areas.
+- **Igor Lisboa**
+- **Henrique Scander**
 
----
+Special thanks to **Professor Andrea Bitencourt**, whose support was fundamental to the team's participation in OBR.
 
-# Software
-
-The main control software was developed in **Python** using **Open-RDK** for communication with the robot hardware.
-
-The software architecture separates the main control loop from navigation, PID control, motor commands, and movement-related logic.
-
-The robot continuously:
-
-1. Reads its sensors
-2. Identifies the current track situation
-3. Selects an appropriate behavior
-4. Controls the motors
-5. Returns to normal line following when possible
+Her contribution included encouraging the team to participate, helping provide materials and resources, enabling access to GSAM and the Robotics Laboratory, and supporting the team throughout the preparation process.
 
 ---
 
-## Navigation Flow
+## Robot Overview
 
-~~~text
-             Sensors
-                │
-                ▼
-       Environment Reading
-                │
-                ▼
-      Situation Identification
-                │
-        ┌───────┴────────┐
-        │                │
-        ▼                ▼
- Normal Track      Special Situation
-        │                │
-        ▼                ▼
- PID Following     Dedicated Maneuver
-        │                │
-        └───────┬────────┘
-                ▼
+The LOGOS robot is the result of the integration of multiple engineering areas.
+
+At a high level, the system can be represented as:
+
+    Sensors
+       |
+       v
+    Perception
+       |
+       v
+    Navigation Logic
+       |
+       +-------------------+
+       |                   |
+       v                   v
+    PID Line          Special Track
+    Following           Behaviors
+       |                   |
+       +---------+---------+
+                 |
+                 v
            Motor Control
-                │
-                ▼
-          Next Reading
-~~~
+                 |
+                 v
+        Mechanical System
+
+The software currently stored in this repository represents the control and experimentation layer of a larger physical robotics project.
 
 ---
 
-# PID Line Following
+## Mechanical Design
 
-During normal track conditions, the robot uses a **PID controller** to maintain alignment with the line.
+The mechanical subsystem provides the physical platform required for navigation and interaction with the track.
 
-The infrared sensor provides information about the line position.
+The project involved work with elements such as:
 
-The PID controller calculates the tracking error and continuously corrects the motor speeds.
+- Robot chassis and structural assembly
+- Motors
+- Wheels
+- Transmission
+- Sensor positioning
+- Mechanical integration with the electronics
+- Mechanisms required by the robot's competition tasks
 
-Conceptually:
+Mechanical design decisions directly affect software behavior.
 
-~~~text
-Line Position
-     │
-     ▼
-Tracking Error
-     │
-     ▼
-PID Controller
-     │
-     ▼
-Motor Correction
-     │
- ┌───┴───┐
- ▼       ▼
-Left    Right
-Motor   Motor
-~~~
+Wheel traction, chassis geometry, weight distribution, sensor height, drivetrain behavior, and assembly tolerances all influence how accurately the robot can follow lines and execute maneuvers.
 
-This improves robot stability during:
+For this reason, movement parameters cannot be treated as purely software values: they must be validated on the physical robot.
 
-- Straight sections
-- Smooth curves
-- Direction corrections
-- Continuous line tracking
+The repository currently focuses mainly on software and experimental code and does not yet contain complete mechanical CAD documentation.
 
 ---
 
-# Track Handling
+## Electronics
 
-The robot contains dedicated logic for situations where normal PID following is not enough.
+The robot combines embedded processing, sensors, motor actuation, and power electronics.
 
-## 90-Degree Turns
+The development context includes:
 
-Specific infrared sensor patterns are used to detect possible sharp turns.
-
-When a candidate is detected, the robot temporarily leaves normal line-following mode and performs a dedicated maneuver.
-
----
-
-## Line Gaps
-
-The robot can identify situations where the line temporarily disappears.
-
-Instead of immediately considering the track lost, the robot attempts to continue forward and detect the line again.
-
----
-
-## Lost-Line Recovery
-
-When the robot completely loses the line, recovery logic attempts to locate the track and resume normal navigation.
-
----
-
-## Color Detection
-
-Color sensors are used to identify special markings on the track.
-
-These markings can modify the robot's navigation decisions.
-
-Red detection can also be used as a stopping condition.
-
----
-
-## Obstacle Detection
-
-A distance sensor allows the robot to identify obstacles positioned in front of it.
-
-Dedicated obstacle-handling logic can then be executed before the robot returns to the original track.
-
----
-
-# Competition Strategy
-
-During development, several navigation strategies were studied and tested.
-
-One of the most important engineering decisions was prioritizing:
-
-- Reliability
-- Repeatability
-- Predictable behavior
-- Physical testing
-
-For several special maneuvers, the competition version of the robot used **time-based movement sequences**.
-
-Although more advanced approaches such as odometry were also studied during development, time-based behaviors had accumulated significantly more physical testing before the competition.
-
-This created an important engineering trade-off:
-
-~~~text
-More Advanced Strategy
-        vs.
-More Tested Strategy
-~~~
-
-For OBR 2026, reliability was considered more important than introducing a technique that had not yet received the same amount of validation on the physical robot.
-
----
-
-# Electronics
-
-The electronics system is responsible for connecting the computational control logic to the physical robot.
-
-The robot integrates:
-
-- Motor control
+- Raspberry Pi
+- Motor control electronics
 - Infrared line sensing
-- Color sensing
+- RGB/color sensing
 - Distance sensing
-- Power distribution
-- Embedded processing
-- Hardware communication
+- Motors
+- Embedded power system
+- Communication between processing and robot peripherals
 
-The electronic architecture was developed to allow the software to obtain environmental information and independently control the robot's actuators.
+The software interacts with these devices through **Open-RDK**, which provides the interface used by the Python control application to access motors and sensors.
+
+The repository itself primarily documents the software side of this integration; complete electrical schematics are not currently included.
 
 ---
 
-## Sensor Integration
+## Sensors
 
-Different sensors provide complementary information to the navigation system.
+The current main control code accesses several sensor types through Open-RDK.
 
-### Infrared Line Sensor
+### Line Sensor
 
-Responsible for detecting:
+The line sensor provides:
 
-- Line position
-- Track alignment
-- Curves
-- Gaps
-- Possible intersections
-- Sharp turns
+- Line detection state
+- Digital sensor values
+- Estimated line position
+
+These values are used both for normal PID line following and for recognizing special track patterns.
 
 ### Color Sensors
 
-Used to detect color markings that represent special conditions on the OBR track.
+Two color sensors are used by the current control logic.
+
+The software checks for colors such as:
+
+- Green
+- Red
+
+Green markings are used by the navigation logic to classify direction-related situations.
 
 ### Distance Sensor
 
-Used for obstacle detection and distance-related navigation decisions.
+A distance sensor is used to detect obstacles in front of the robot and trigger a dedicated obstacle-handling maneuver.
+
+### Camera Experiments
+
+The repository also contains experimental computer-vision code using a camera, OpenCV, and NumPy.
+
+These files explore image thresholding, regions of interest, line position estimation, and PID calculations based on image data.
+
+This camera code should be considered **experimental work** and is not presented here as the main navigation system used by the robot.
 
 ---
 
-## Motor Control
+## Software Architecture
 
-The robot uses independent motor control for differential-drive navigation.
+The main software is located in `line_codes/`.
 
-This allows the software to perform:
+The control loop combines:
 
-- Straight movement
-- Curves
-- In-place rotation
-- Direction correction
-- Special maneuvers
+1. Sensor acquisition
+2. Track interpretation
+3. PID line following
+4. Special-condition detection
+5. Motor commands
+6. Movement and recovery strategies
 
-Different speeds can be applied to each side of the robot.
+The current main program uses Open-RDK to connect to:
 
-For example:
+- Two traction motors
+- A line sensor
+- A distance sensor
+- Two color sensors
 
-~~~text
-Left Motor      Right Motor
-    25              25
-        Straight
-
-Left Motor      Right Motor
-    15              30
-        Curve
-
-Left Motor      Right Motor
-   -20              20
-        Rotation
-~~~
+A `LatestCommandDriver` abstraction is used to handle motor speed commands asynchronously.
 
 ---
 
-# Mechanical Design and Modeling
+## PID Line Following
 
-Mechanical development was another important part of the project.
+During normal line following, the robot uses a PID controller.
 
-The robot had to provide a structure capable of integrating:
+The line sensor estimates the position of the line relative to the center of the robot.
 
-- Motors
-- Wheels
-- Sensors
-- Electronic components
-- Wiring
-- Processing hardware
-- Mechanical mechanisms
+The control flow is:
 
-Mechanical design decisions directly affect robot performance.
+    Line Sensor
+         |
+         v
+    Line Position
+         |
+         v
+        Error
+         |
+         v
+         PID
+         |
+         v
+    Motor Correction
 
-Factors considered during development included:
+Conceptually:
 
-- Component positioning
-- Sensor height
-- Sensor alignment
-- Center of gravity
-- Weight distribution
-- Wheel positioning
-- Structural rigidity
-- Accessibility for maintenance
-- Space for electronics
-- Cable organization
+    error = target_position - measured_position
 
----
+    correction = PID(error)
 
-## Prototyping and Iteration
+    left_speed  = base_speed + correction
+    right_speed = base_speed - correction
 
-The mechanical structure was not treated as an isolated part of the project.
+The PID controller continuously adjusts the difference between the left and right motor commands to keep the robot aligned with the line.
 
-Changes in software often required mechanical adjustments, while changes in robot geometry could influence PID tuning and sensor behavior.
+PID line following and odometry solve different problems.
 
-The development process therefore followed an iterative cycle:
+The PID controller handles **continuous trajectory correction based on the detected line**.
 
-~~~text
-Mechanical Design
-       │
-       ▼
-Electronics Integration
-       │
-       ▼
-Software Development
-       │
-       ▼
-Physical Testing
-       │
-       ▼
-Problem Identification
-       │
-       └───────────────┐
-                       ▼
-                    Redesign
-~~~
-
-This iterative process allowed the robot to evolve based on observations made during real track testing.
+Odometry, when used, estimates **robot movement based on wheel displacement**.
 
 ---
 
-# System Integration
+## Track Handling
 
-The robot can be understood as the integration of three major layers:
+Normal PID control is not sufficient for every situation encountered on the track.
 
-~~~text
-┌──────────────────────────────┐
-│          SOFTWARE            │
-│                              │
-│ PID • Navigation • Decisions │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│         ELECTRONICS          │
-│                              │
-│ Sensors • Motors • Control   │
-└──────────────┬───────────────┘
-               │
-               ▼
-┌──────────────────────────────┐
-│         MECHANICS            │
-│                              │
-│ Structure • Wheels • Layout  │
-└──────────────────────────────┘
-~~~
+The current software includes logic for situations such as:
 
-None of these areas operate independently.
-
-The final robot is the result of their integration.
-
----
-
-# Project Structure
-
-~~~text
-LOGOS/
-├── line_codes/
-│   ├── CommandDriver.py
-│   ├── line_functions.py
-│   ├── main.py
-│   ├── odometry.py
-│   ├── pid.py
-│   └── vespera/
-│
-├── testes_cam/
-│   └── pattern.png
-│
-├── .gitattributes
-└── README.md
-~~~
-
----
-
-# Core Modules
-
-## `main.py`
-
-Main execution loop of the robot.
-
-Responsibilities include:
-
-- Open-RDK initialization
-- Hardware connection
-- Line sensor reading
-- Color sensor reading
-- Distance sensor reading
-- PID line following
-- Track condition detection
-- Navigation coordination
-- Motor control
-
----
-
-## `line_functions.py`
-
-Contains most of the navigation and track-handling logic.
-
-Responsibilities include:
-
-- Curve detection
-- Gap detection
+- Sharp curves and possible 90-degree situations
+- Multiple possible paths
+- Green markings
+- 180-degree indications
+- Line gaps
 - Lost-line recovery
+- Obstacles
+- End-of-course red detection
+
+Different situations may combine sensor information with predefined movement sequences.
+
+---
+
+## Competition Strategy
+
+One of the most important engineering decisions in this project was choosing which navigation strategy to trust during competition.
+
+During development, the team studied and implemented odometry concepts. An `Odometry` module is present in the repository and estimates robot pose from left and right motor position telemetry.
+
+However, several special maneuvers in the competition-oriented navigation code use **time-calibrated movement sequences**.
+
+Examples in the current code include timed:
+
+- Rotations
+- Obstacle avoidance movements
+- Direction searches
+- Color-marking maneuvers
+- Short forward and backward movements
+
+This was a deliberate engineering decision.
+
+The time-based strategy had received significantly more **physical testing on the actual robot** before OBR 2026.
+
+For competition, the priority was not selecting the most complex control method. The priority was selecting the method whose behavior was best understood and most extensively validated.
+
+Important criteria included:
+
+- Reliability
+- Repeatability
+- Known robot behavior
+- Amount of physical testing
+- Calibration effort
+- Competition risk
+- Recovery behavior
+
+### Time-Based Movement and Odometry
+
+Time-based movement is essentially an open-loop movement strategy: the system commands a motor action for a calibrated interval and assumes that the physical result will remain sufficiently close to what was observed during testing.
+
+Its accuracy can be affected by:
+
+- Surface conditions
+- Wheel slip
+- Mechanical differences
+- Changes in traction
+- Robot alignment
+- Calibration
+- Interaction with obstacles or track geometry
+
+Odometry introduces a different approach.
+
+Instead of relying exclusively on elapsed time, movement can be estimated from wheel rotation.
+
+However, odometry is not automatically more accurate in every situation.
+
+It is also affected by:
+
+- Wheel slip
+- Incorrect wheel dimensions
+- Wheel diameter differences
+- Incorrect wheel-base measurements
+- Mechanical tolerances
+- Measurement errors
+- Accumulated pose error
+
+Therefore, the engineering question is not simply:
+
+> Which approach is more advanced?
+
+A more useful question is:
+
+> Which approach has sufficient accuracy, validation, and robustness for the current requirement?
+
+For OBR 2026, the extensively tested strategy was the appropriate choice for several competition maneuvers.
+
+---
+
+## Odometry
+
+Although several competition maneuvers use timing, the repository also contains a differential-drive odometry implementation.
+
+The software reads motor position telemetry and converts wheel rotation into estimated wheel displacement.
+
+For each update:
+
+    Right Wheel Rotation ---> Right Wheel Displacement
+                                      |
+                                      |
+    Left Wheel Rotation ----> Left Wheel Displacement
+                                      |
+                                      v
+                            Differential-Drive Model
+                                      |
+                         +------------+------------+
+                         |                         |
+                         v                         v
+                  Linear Movement             Rotation
+                         |                         |
+                         +------------+------------+
+                                      |
+                                      v
+                                Robot Pose
+                              (x, y, theta)
+
+The current implementation maintains:
+
+- `x`
+- `y`
+- `theta`
+
+The presence of this module reflects the team's experimentation with alternative movement-control strategies, even though it was not the primary mechanism used for every competition maneuver.
+
+---
+
+## Project Structure
+
+    LOGOS/
+    ├── line_codes/
+    │   ├── CommandDriver.py
+    │   ├── line_functions.py
+    │   ├── main.py
+    │   ├── odometry.py
+    │   ├── pid.py
+    │   │
+    │   ├── honesto/
+    │   │   ├── bola.py
+    │   │   ├── linha_erro.py
+    │   │   └── roi.py
+    │   │
+    │   └── desonesto/
+    │       ├── outrabola.py
+    │       └── teste.py
+    │
+    ├── testes_cam/
+    │   └── pattern.png
+    │
+    └── .gitattributes
+
+The `honesto/`, `desonesto/`, and `testes_cam/` directories contain experimental work related to camera and vision tests and should not be interpreted as the main control architecture of the robot.
+
+---
+
+## Main Modules
+
+### `line_codes/main.py`
+
+Main runtime loop.
+
+It connects to the robot devices through Open-RDK and coordinates:
+
+- Line sensor readings
+- Color sensor readings
+- Distance sensing
+- PID line following
+- Special track handling
+- Motor commands
+- Robot stopping conditions
+
+### `line_codes/line_functions.py`
+
+Contains most of the navigation behaviors.
+
+Current code includes logic related to:
+
+- Curve candidate detection
+- Color marking detection
+- Gap detection
+- Line recovery
 - Obstacle handling
-- Special maneuvers
-- Motor coordination
-- Track interpretation
+- Direction checking
+- PID line following
+- Motor movement helpers
+- Experimental odometry-based rotations
+
+### `line_codes/pid.py`
+
+Implements the PID controller used during normal line following.
+
+The implementation contains:
+
+- Proportional term
+- Integral accumulation
+- Derivative term
+- Time-step handling
+- Output limiting
+
+### `line_codes/odometry.py`
+
+Implements differential-drive odometry.
+
+Motor position telemetry is converted to left and right wheel displacement and then used to estimate:
+
+- Linear displacement
+- Angular displacement
+- `x`
+- `y`
+- `theta`
+
+### `line_codes/CommandDriver.py`
+
+Provides a threaded motor command abstraction.
+
+The driver stores the latest pending motor command and sends it through a dedicated worker thread.
 
 ---
 
-## `pid.py`
+## Technologies
 
-Contains the PID controller responsible for normal line following.
-
----
-
-## `odometry.py`
-
-Contains odometry and movement-estimation experiments developed during the project.
-
-Odometry was studied as an alternative approach for movement control, although the competition strategy prioritized the maneuvers that had received the greatest amount of physical testing.
-
----
-
-## `CommandDriver.py`
-
-Provides an abstraction for sending and managing motor commands.
-
----
-
-# Technologies and Areas
+The project includes or experiments with:
 
 - Python
 - Open-RDK
-- Robotics
-- PID Control
-- Embedded Systems
-- Autonomous Navigation
-- Electronics
-- Mechanical Design
-- Sensor Integration
-- Infrared Sensors
-- Color Sensors
-- Distance Sensors
-- Motor Control
-- Differential Drive
-- Control Systems
-- Prototyping
+- Raspberry Pi
+- Embedded robotics
+- PID control
+- Differential-drive odometry
+- Infrared sensing
+- RGB/color sensing
+- Distance sensing
+- Motor control
+- OpenCV — experimental camera work
+- NumPy — experimental camera work
+- Mechanical and electronic integration
 
 ---
 
-# Running the Project
+## Development and Testing
 
-The project requires:
+Development was strongly based on physical experimentation.
 
-- A configured Open-RDK environment
-- Compatible robot hardware
-- Correct sensor identifiers
-- Correct motor identifiers
+A typical robotics development cycle involved:
 
-Navigate to:
+    Implement
+       |
+       v
+    Test on Robot
+       |
+       v
+    Observe Behavior
+       |
+       v
+    Adjust Parameters / Mechanics / Logic
+       |
+       v
+    Test Again
 
-~~~bash
-cd line_codes
-~~~
+This was particularly important for:
 
-Run:
+- PID tuning
+- Motor speeds
+- Rotation times
+- Obstacle avoidance
+- Sensor positioning
+- Green-marking detection
+- Track recovery
+- Mechanical adjustments
 
-~~~bash
-python main.py
-~~~
-
-Hardware identifiers must correspond to the devices connected to the robot.
-
----
-
-# Development Methodology
-
-Development was strongly based on physical testing.
-
-Individual systems were progressively validated before integration.
-
-The general process followed:
-
-~~~text
-Mechanical Assembly
-       ↓
-Electronics Integration
-       ↓
-Hardware Communication
-       ↓
-Sensor Calibration
-       ↓
-Motor Testing
-       ↓
-PID Development
-       ↓
-Special Maneuvers
-       ↓
-Track Testing
-       ↓
-Adjustment
-       ↓
-Competition Validation
-~~~
-
-This approach allowed problems to be isolated and corrected before introducing additional complexity.
+The repository should therefore be understood as part of an iterative hardware-software development process.
 
 ---
 
-# OBR 2026
+## Future Development
 
-The 2026 season represented Team LOGOS' first participation in the Brazilian Robotics Olympiad.
+Possible future work includes:
 
-In addition to the technical challenges, the project provided practical experience involving:
+- Further evaluation of odometry-based special maneuvers
+- Improved motion estimation and calibration
+- Additional sensor validation
+- More structured hardware testing tools
+- Improved navigation state organization
+- Further camera and computer-vision experiments
+- Better documentation of mechanical and electronic subsystems
+- Automated software tests for hardware-independent logic
+- Continued comparison between movement-control strategies
 
-- Engineering decisions
-- Teamwork
-- Problem-solving
-- Debugging
-- Robotics
-- Software development
-- Electronics
-- Mechanical design
-- Testing under real conditions
-
-The experience resulted in the team's first recognition at the competition:
-
-> 🏆 **Extra Innovation Award — OBR 2026**
+These items represent possible development directions and should not be interpreted as currently implemented features.
 
 ---
 
-# Future Development
+## Acknowledgements
 
-Future versions of the robot may explore:
+Team LOGOS thanks everyone who contributed to the development and preparation of the project.
 
-- More advanced odometry
-- Sensor fusion
-- Improved navigation algorithms
-- More robust intersection detection
-- Improved obstacle handling
-- Rescue-room navigation
-- Computer vision
-- More advanced movement control
-- Improved mechanical design
+Special thanks to:
 
----
+- **IFBA — Instituto Federal da Bahia**
+- **IFBA Campus Salvador**
+- **GSAM — Sistema de Automação e Mecatrônica**
+- **IFBA Robotics Laboratory**
+- **Professor Andrea Bitencourt**
+- **Igor Lisboa**
+- **Henrique Scander**
 
-# Organization
-
-**Team LOGOS**
-
-Federal Institute of Bahia — **IFBA**
-
-**GSAM — Automation and Mechatronics Systems Research Group**
-
-**IFBA Robotics Laboratory**
+The team also recognizes the work of **Robovante**, which represented IFBA alongside LOGOS during OBR 2026.
 
 ---
 
-# Repository
+## Team LOGOS — OBR 2026
 
-https://github.com/LOGOSIFBA/LOGOS
+- **Rafael Lima Ribeiro dos Santos** — Captain
+- **Larissa Valentin**
+- **Israel Santos**
+- **Chanderson Santos**
+```
