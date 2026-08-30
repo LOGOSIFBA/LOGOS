@@ -556,8 +556,7 @@ Team LOGOS thanks everyone who contributed to the development and preparation of
 
 Special thanks to:
 
-- **IFBA — Instituto Federal da Bahia**
-- **IFBA Campus Salvador**
+- **IFBA SSA — Instituto Federal de Educação, Ciência e Tecnologia da Bahia, Campus Salvador
 - **GSAM — Sistema de Automação e Mecatrônica**
 - **IFBA Robotics Laboratory**
 - **Professor Andrea Cassia Peixoto Bitencourt**
