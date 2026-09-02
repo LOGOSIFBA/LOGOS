@@ -49,8 +49,6 @@ LOGOS represented IFBA alongside another team, **Robovante**.
 
 ### Extra Innovation Award — OBR 2026
 
-Team LOGOS received the **Extra Innovation Award** during OBR 2026.
-
 The award recognizes the work developed by the team as a whole throughout the design, integration, experimentation, and competition process.
 
 ---
@@ -59,18 +57,20 @@ The award recognizes the work developed by the team as a whole throughout the de
 
 The project was developed with institutional and technical support from:
 
-- **IFBA — Instituto Federal da Bahia**
+- **IFBA SSA — Instituto Federal de Educação, Ciência e Tecnologia da Bahia, Campus Salvador**
 - **GSAM — Sistema de Automação e Mecatrônica**
 - **IFBA Robotics Laboratory**
 
 The team also received important technical support from:
 
-- **Igor Lisboa**
-- **Henrique Scander**
+- **Igor Lisboa Ramos**
+- **Henrique Scander Coelho**
 
-Special thanks to **Professor Andrea Bitencourt**, whose support was fundamental to the team's participation in OBR.
+Special thanks to **Professor Andrea Cassia Peixoto Bitencourt**, whose support was fundamental to the team's participation in OBR.
 
 Her contribution included encouraging the team to participate, helping provide materials and resources, enabling access to GSAM and the Robotics Laboratory, and supporting the team throughout the preparation process.
+
+The team also recognizes the work of **Robovante**.
 
 ---
 
@@ -278,7 +278,7 @@ Different situations may combine sensor information with predefined movement seq
 
 One of the most important engineering decisions in this project was choosing which navigation strategy to trust during competition.
 
-During development, the team studied and implemented odometry concepts. An `Odometry` module is present in the repository and estimates robot pose from left and right motor position telemetry.
+During development, the team studied and implemented odometry concepts. An `Odometry` module is present in the repository, detailed further below.
 
 However, several special maneuvers in the competition-oriented navigation code use **time-calibrated movement sequences**.
 
@@ -459,15 +459,7 @@ The implementation contains:
 
 ### `line_codes/odometry.py`
 
-Implements differential-drive odometry.
-
-Motor position telemetry is converted to left and right wheel displacement and then used to estimate:
-
-- Linear displacement
-- Angular displacement
-- `x`
-- `y`
-- `theta`
+Implements the differential-drive odometry algorithm described in the **Odometry** section above.
 
 ### `line_codes/CommandDriver.py`
 
@@ -547,30 +539,3 @@ Possible future work includes:
 - Continued comparison between movement-control strategies
 
 These items represent possible development directions and should not be interpreted as currently implemented features.
-
----
-
-## Acknowledgements
-
-Team LOGOS thanks everyone who contributed to the development and preparation of the project.
-
-Special thanks to:
-
-- **IFBA SSA — Instituto Federal de Educação, Ciência e Tecnologia da Bahia, Campus Salvador**
-- **GSAM — Sistema de Automação e Mecatrônica**
-- **IFBA Robotics Laboratory**
-- **Professor Andrea Cassia Peixoto Bitencourt**
-- **Igor Lisboa Ramos**
-- **Henrique Scander Coelho**
-
-The team also recognizes the work of **Robovante**, which represented IFBA alongside LOGOS during OBR 2026.
-
----
-
-## Team LOGOS — OBR 2026
-
-- Chanderson Santos de Santana
-- Israel Santos Rodrigues de Carvalho
-- Larissa do Nascimento Valentim de Oliveira
-- Rafael Lima Ribeiro dos Santos
-```
