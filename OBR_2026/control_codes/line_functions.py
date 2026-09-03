@@ -266,7 +266,7 @@ def handle_color_marking(color_marking):
     if color_marking == "180":
         print("Color 180 detected", flush=True)
         both_drivers_set_speed(30, -30)
-        time.sleep(4.4)
+        time.sleep(5.3)
         return True
 
     if color_marking == "LEFT":
